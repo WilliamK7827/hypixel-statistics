@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hypixel Statistics</title>
+		
+		<link rel="stylesheet" href="style.css">	
+		<script src="script.js"></script>
+    <!--Manifest-->
+    <!--Favicon-->
+    
+  </head>
+
+  <body>
+    
+    <div id="grid-container">
+    
+      <header>
+        <span>Hypixel Statistics</span>
+        <a target="_blank" href="https://cors-anywhere.herokuapp.com/" id="cors-anywhere">Cors</a>
+      </header>
+      
+      <aside>
+        <div id="aside-bg"></div>
+        
+        <div id="searchbar" class="bar">
+          
+          <div id="searchtype" onclick="toggleSearchList()"><span id="searchtypehead">Player</span>
+          <ul id="searchlist"><!--
+            --><li onclick="changeSearchType('player')">Player</li><!--
+            --><!--li onclick="changeSearchType('guild')">Guild</li><!--
+            --><!--li onclick="changeSearchType('leaderboards')">Leaderboards</li><!--
+            --><!--li onclick="changeSearchType('punishments')">Punishments</li><!--
+          --></ul><!--
+          --></div><!--
+          --><input type="text" id="search" placeholder="Search by Username or UUID"><!--
+          --><button id="search-btn" onclick="searchPlayer()">&gt;</button>
+        
+        </div>
+        
+        <div id="apikey-bar" class="bar">
+        
+          <div id="apikey-btn" onclick="searchPlayer()">+</div><!--
+          --><input type="text" id="apikey" placeholder="Provide API Key (optional)">
+          
+        </div>
+        
+      </aside>
+      
+      <main>
+        
+        <div id="error" class="bar"></div>
+        
+      </main>
+      
+      
+      <footer>
+      
+      </footer>
+    
+    </div>
+    
+  </body>
+</html>

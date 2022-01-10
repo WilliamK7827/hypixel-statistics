@@ -1,0 +1,257 @@
+
+@import url('https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@600&display=swap');
+
+:root {
+	--lightAccent1: skyblue;
+	--darkAccent1: blue;
+	--lightAccent2: lightgreen;
+	--darkAccent2: green;
+	--background: white;
+}
+
+body {
+	margin: 0;
+	padding: 0;
+	font-family: 'Source Sans Pro', sans-serif;
+}
+
+header {
+	position: fixed;
+	height: 5vh;
+	width: 100vw;
+	background-color: var(--lightAccent1);
+	z-index: 2;
+}
+
+header span {
+	position: relative;
+	left: 100px;
+	color: white;
+	font-size: 3vh;
+	line-height: 5vh;
+}
+
+header a#cors-anywhere {
+	background-color: #FFF2;
+	float: right;
+	height: 5vh;
+	line-height: 5vh;
+	margin-right: 5vh;
+}
+
+aside {
+	height: 0;
+}
+
+#aside-bg {
+	position: relative;
+	height: 25vh;
+	width: 100vw;
+	background-image: linear-gradient(#0004, #0004);
+}
+
+.bar {
+	display: flex;
+	border-radius: 3px;
+	border: 1px solid lightgrey;
+	left: 50%;
+	transform: translate(-50%, 0);
+}
+
+#searchbar {
+	width: auto;
+	position: absolute;
+	top: calc(25vh - 8.5px - 2vmin);
+	z-index: 1;
+}
+
+#searchbar > * {
+	box-sizing: content-box;
+	display: inline-block;
+	padding: 2vmin;
+	margin: 0;
+	border: 1px solid white;
+	height: 15px;
+}
+
+#searchtype {
+	width: 80px;
+	border-radius: 3px 0 0 3px;
+	background-color: var(--lightAccent1);
+	color: white;
+	font-size: 2vh;
+	line-height: 1.5vh;
+}
+
+#searchlist {
+	position: relative;
+	display: none;
+	padding: 0;
+	list-style-type: none;
+	background-color: var(--darkAccent1);
+	transform: translate(-2vmin, 0);
+	color: white;
+}
+
+#searchlist li {
+	padding: 1vmin 2vmin;
+	font-size: 1.5vh;
+	width: 80px;
+}
+
+#searchlist li:hover {
+	background-color: var(--lightAccent1);
+	text-decoration: underline;
+}
+
+#search {
+	width: 40vw;
+	border-radius: 0;
+	background-color: white;
+}
+
+#search-btn {
+	width: 40px;
+	text-align: center;
+	border-radius: 0 3px 3px 0;
+	background-color: var(--lightAccent2);
+	color: white;
+	font-weight: bold;
+	font-size: 2.5vmin;
+	line-height: 0;
+}
+
+#search-btn:hover {
+	background-color: var(--darkAccent2);
+}
+
+#apikey-bar {
+	position: relative;
+	top: 7.5vh;
+	width: calc(45vw + 4vmin + 17px);
+}
+
+#apikey-bar > * {
+	box-sizing: content-box;
+	display: inline-block;
+	padding: 1vmin;
+	margin: 0;
+	border: 1px solid white;
+	height: 15px;
+}
+
+#apikey-btn {
+	width: 15px;
+	border-radius: 3px 0 0 3px;
+	border-right: 1px solid lightgrey;
+	text-align: center;
+	background-color: var(--lightAccent2);
+	color: white;
+	font-weight: bold;
+	font-size: 2.5vh;
+	line-height: 1.5vh;
+}
+
+#apikey {
+	width: 45vw;
+}
+
+#error {
+	position: relative;
+	display: none;
+	width: calc(40vw + 8vmin + 19px);
+	margin-bottom: 5vh;
+	padding: 1vmin;
+}
+
+main {
+	box-sizing: border-box;
+	position: relative;
+	top: 35vh;
+	width: 100vw;
+	height: auto;
+	margin-top: 2.5vh;
+	padding: 5vh;
+}
+
+section {
+	margin-bottom: 5vh;
+	z-index: 1;
+}
+
+section div.section-heading {
+	border: 1px solid #CCC;
+	border-radius: 25px 25px 0 0;
+	padding: 10px 20px;
+	font-size: 1em;
+}
+
+section span.section-btn {
+	font-weight: bold;
+	font-size: 1em;
+	padding: 10px;
+}
+
+section div.section-body {
+	display: none;
+	border: 1px solid #CCC;
+	border-top-width: 0px;
+	border-radius: 0 0 25px 25px;
+	padding: 20px;
+}
+
+section#profile-results span.profile-select-btn {
+	display: inline-block;
+	margin-bottom: 3px;
+	padding: 3px 5px;
+	background-color: var(--lightAccent1);
+	border-radius: 5px 0 0 5px;
+	border-right: 1px solid white;
+	color: white;
+	text-decoration: none;
+	cursor: pointer;
+}
+
+section#profile-results span.profile-select-btn:hover {
+	background-color: var(--darkAccent1);
+}
+
+section#profile-results span.profile-clear-btn {
+	display: inline-block;
+	margin-bottom: 3px;
+	padding: 3px 5px;
+	background-color: var(--lightAccent2);
+	border-radius: 0 5px 5px 0;
+	border-left: 1px solid white;
+	color: white;
+	text-decoration: none;
+	cursor: pointer;
+}
+
+section#profile-results span.profile-clear-btn:hover {
+	background-color: var(--darkAccent2);
+}
+
+section#profile-results span.profile-status {
+	font-style: italic;
+}
+
+section#profile-results div#profile-results-body {
+	max-height: 35vh;
+	overflow: auto;
+}
+
+section#profile-results div#profile-results-body div.profile-results-item {
+	font-size: 1.75vh;
+	margin: 10px 0;
+	padding: 5px 0 5px 10px;
+	border-left: 0.1vh solid black;
+}
+
+footer {
+	position: fixed;
+	width: 100vw;
+	height: 5vh;
+	bottom: 0;
+	z-index: 1;
+}
