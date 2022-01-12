@@ -1,10 +1,10 @@
 {
-  "//1": "Hypixel Statistics",
+  "//1": "describes your app and its dependencies",
   "//2": "https://docs.npmjs.com/files/package.json",
   "//3": "updating this file will download and update your packages",
-  "name": "Hypixel Statistics",
+  "name": "hello-express",
   "version": "0.0.1",
-  "description": "Hypixel Statistics",
+  "description": "A simple Node app built on Express, instantly up and running.",
   "main": "server.js",
   "scripts": {
     "start": "node server.js"
