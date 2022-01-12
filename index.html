@@ -3,12 +3,15 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Hypixel Statistics">
+    <meta name="theme-color" content="#6d1d0a"/>
     <title>Hypixel Statistics</title>
 		
 		<link rel="stylesheet" href="style.css">	
 		<script src="script.js"></script>
-    <!--Manifest-->
-    <!--Favicon-->
+    <link rel="manifest" href="manifest.json">
+    <link rel="apple-touch-icon" href="icons/icon-192x192.png">
+    <link rel="icon" type="image/png" href="icons/icon-192x192" sizes="192x192">
     
   </head>
 
@@ -17,8 +20,7 @@
     <div id="grid-container">
     
       <header>
-        <span>Hypixel Statistics</span>
-        <a target="_blank" href="https://cors-anywhere.herokuapp.com/" id="cors-anywhere">Cors</a>
+        <span onclick="reload()">Hypixel Statistics</span>
       </header>
       
       <aside>
@@ -56,7 +58,8 @@
       
       
       <footer>
-      
+        <span>This page requires CORS to work properly, </span>
+        <a target="_blank" href="https://cors-anywhere.herokuapp.com/" id="cors-anywhere">Click here for CORS</a>
       </footer>
     
     </div>

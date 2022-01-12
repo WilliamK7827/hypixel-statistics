@@ -18,9 +18,10 @@ body {
 header {
 	position: fixed;
 	height: 5vh;
-	width: 100vw;
+	width: 100%;
 	background-color: var(--lightAccent1);
 	z-index: 2;
+	box-shadow: 0 0 5px;
 }
 
 header span {
@@ -31,14 +32,6 @@ header span {
 	line-height: 5vh;
 }
 
-header a#cors-anywhere {
-	background-color: #FFF2;
-	float: right;
-	height: 5vh;
-	line-height: 5vh;
-	margin-right: 5vh;
-}
-
 aside {
 	height: 0;
 }
@@ -46,7 +39,7 @@ aside {
 #aside-bg {
 	position: relative;
 	height: 25vh;
-	width: 100vw;
+	width: 100%;
 	background-image: linear-gradient(#0004, #0004);
 }
 
@@ -164,6 +157,10 @@ aside {
 	padding: 1vmin;
 }
 
+pre {
+	white-space: pre-wrap;
+}
+
 main {
 	box-sizing: border-box;
 	position: relative;
@@ -248,10 +245,23 @@ section#profile-results div#profile-results-body div.profile-results-item {
 	border-left: 0.1vh solid black;
 }
 
+section td {
+	padding-right: 10px;
+}
+
+/*
+section#profile-general div#profile-general-body table tr.profile-general-item td {
+	padding-right: 10px;
+}*/
+
 footer {
 	position: fixed;
-	width: 100vw;
+	width: 100%;
 	height: 5vh;
 	bottom: 0;
 	z-index: 1;
+	background-color: var(--lightAccent2);
+	color: white;
+	padding-left: 15px;
+	line-height: 5vh;
 }

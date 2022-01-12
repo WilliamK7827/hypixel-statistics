@@ -1,3 +1,7 @@
+// service worker
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('/sw.js');
+}
 
 document.addEventListener("load", colourPage());
 
@@ -16,11 +20,14 @@ function colourPage() {
   let root = document.querySelector(':root').style;
   root.setProperty('--lightAccent1', 'hsl(' + hue + 'deg, ' + sat + '%, ' + 50 + '%)');
   root.setProperty('--darkAccent1', 'hsl(' + hue + 'deg, ' + sat + '%, ' + 40 + '%)');
-  hue += 50;
+  hue += 75;
   root.setProperty('--lightAccent2', 'hsl(' + hue + 'deg, ' + sat + '%, ' + 50 + '%)');
   root.setProperty('--darkAccent2', 'hsl(' + hue + 'deg, ' + sat + '%, ' + 40 + '%)');
 }
 
+function reload() {
+  document.location.reload(true);
+}
 
 /* SEARCH FEATURES */
 
@@ -140,12 +147,17 @@ function searchPlayer() {
       },
       credentials: 'include'
     })*/
-    .then(response => response.json())
+    .then(response => {
+      if (response.status != 403) {
+        return response.json();
+      } else {
+        displayError("Request rejected due to CORS.<pre>" + response.statusText + "</pre>");
+      }
+    })
     .then(data => {
-      apiKeyUsed = document.getElementById("apikey").value;
       showProfile(data);
     })
-    .catch(err => displayError("\"" + playerID + "\" does not exist.<br>Error Code" + err));
+    .catch(err => displayError("User \"" + playerID + "\" does not exist.<pre>" + err + "</pre>"));
     //.catch(err => console.log(err));
   } else {
     fetch("https://cors-anywhere.herokuapp.com/api.mojang.com/users/profiles/minecraft/" + playerID, {
@@ -159,12 +171,17 @@ function searchPlayer() {
       },
       credentials: 'include'
     })*/
-    .then(response => response.json())
+    .then(response => {
+      if (response.status != 403) {
+        return response.json();
+      } else {
+        displayError("Request rejected due to CORS.<pre>" + response.statusText + "</pre>");
+      }
+    })
     .then(data => {
-      apiKeyUsed = false;
       showProfile(data);
     })
-    .catch(err => displayError("\"" + playerID + "\" does not exist.<br>Error Code" + err));
+    .catch(err => displayError("User \"" + playerID + "\" does not exist.<pre>" + err + "</pre>"));
     //.catch(err => console.log(err));
   }
 
@@ -187,7 +204,6 @@ function showProfile(data) {
   let profileResultsItem = document.createElement("div");
   profileResultsItem.classList.add("profile-results-item");
   
-  profileResultsItem.innerHTML = apiKeyUsed ? "Using API Key &nbsp;" : "";
   profileResultsItem.innerHTML += "<span class='profile-select-btn' onclick='selectProfile(\"" + UUID + "\")'>Select</span>";
   profileResultsItem.innerHTML += "<span class='profile-clear-btn' onclick='clearProfile(this.parentElement)'>Clear</span><br>";
   profileResultsItem.innerHTML += "Username: " + username + "<br>";
@@ -201,6 +217,7 @@ function showProfile(data) {
 
 function selectProfile(uuid) {
   
+  apiKeyUsed = document.getElementById("apikey").value;
   let dataFromKey = "";
   
   if (apiKeyUsed) {
@@ -211,7 +228,7 @@ function selectProfile(uuid) {
     .then(data => {
       dataFromKey = data;
     })
-    .catch(err => displayError("The player with the uuid \"" + uuid + "\" does not have any stats.<br>Error Code" + err));
+    .catch(err => displayError("The player with the uuid \"" + uuid + "\" does not have any stats.<pre>" + err + "</pre>"));
     //.catch(err => console.log(err));
   }
   
@@ -220,9 +237,13 @@ function selectProfile(uuid) {
   })
   .then(response => response.json())
   .then(data => {
-    showPlayerStats(Object.assign(data, dataFromKey));
+    if (data.uuid == uuid) {
+      showPlayerStats(Object.assign(data, dataFromKey));
+    } else {
+      throw Error(data.error);
+    }
   })
-  .catch(err => displayError("The player with the uuid \"" + uuid + "\" does not have any stats.<br>Error Code" + err));
+  .catch(err => displayError("The player with the uuid \"" + uuid + "\" does not have any stats.<pre>" + err + "</pre>"));
   //.catch(err => console.log(err));
   
 }
@@ -239,35 +260,114 @@ function showPlayerStats(data) {
   buildSection("profile-general", "General");
   playerGeneral(data);
   
-  // achievements, quests, recent games, friends, online?
-  //guild
+  buildSection("recent-games", "Recent Games");
+  fetchSection(data.uuid, "recentGames");
+  
+  buildSection("profile-friends", "Friends");
+  fetchSection(data.uuid, "friends");
+  
+  // achievements, quests, friends
+  // guild
   
   buildSection("var_dump", "var_dump code for JS stolen from https://theredpine.wordpress.com/2011/10/23/var_dump-for-javascript/");
   document.getElementById("var_dump-body").innerHTML = "";
   var_dump(data, 1, "var_dump-body");
 }
 
+function showDate(timestamp, format) {
+  let date = new Date(timestamp)
+  if (format == null) {return date.toString();}
+  else if (format == "mdt") {
+    let mdt = date.toString().split(" ");
+    return mdt[1] + " " + mdt[2] + " " + mdt[4];
+  }
+}
+
 function playerGeneral(data) {
   
   let profileGeneralBody = document.getElementById("profile-general-body");
-  let profileGeneralItem = document.createElement("div");
-  profileGeneralItem.classList.add("profile-general-item");
-  
   profileGeneralBody.innerHTML = "";
-  profileGeneralItem.innerHTML = "";
-  if (data.first_login != null) profileGeneralItem.innerHTML += "First Login: " + new Date(data.first_login).toString();
-  if (data.last_login != null) profileGeneralItem.innerHTML += "<br>Last Login: " + new Date(data.last_login).toString();
-  if (data.last_logout != null) profileGeneralItem.innerHTML += "<br>Last Logout: " + new Date(data.last_logout).toString();
+  let profileGeneralTable = document.createElement("table");
+  profileGeneralBody.appendChild(profileGeneralTable);
   
-  let PGBinnerHTML = profileGeneralBody.innerHTML;
-  profileGeneralBody.innerHTML = "";
-  profileGeneralBody.appendChild(profileGeneralItem);
-  profileGeneralBody.innerHTML += PGBinnerHTML;
+  if (data.online != null) profileGeneralTable.innerHTML += "<tr class='profile-general-item'><td>Status:</td><td>" + (data.online ? "Online" : "Offline") + "</td></tr>";
+  if (data.language != null) profileGeneralTable.innerHTML += "<tr class='profile-general-item'><td>Language:</td><td>" + data.language + "</td></tr>";
+  if (data.version != null) profileGeneralTable.innerHTML += "<tr class='profile-general-item'><td>Version:</td><td>" + data.mc_version + "</td></tr>";
+  profileGeneralTable.innerHTML += "<tr class='profile-general-item'><td>Rank:</td><td>" + (data.rank == null ? "Non" : data.rank) + "</td></tr>";
+  profileGeneralTable.innerHTML += "<tr class='profile-general-item'><td>Level:</td><td>" + data.level + "</td></tr>";
+  profileGeneralTable.innerHTML += "<tr class='profile-general-item'><td>EXP:</td><td>" + data.exp + "</td></tr>";
+  profileGeneralTable.innerHTML += "<tr class='profile-general-item'><td>Karma:</td><td>" + data.karma + "</td></tr>";
+  profileGeneralTable.innerHTML += "<tr class='profile-general-item'><td>Achievement Points:</td><td>" + data.achievement_points + "</td></tr>";
+  profileGeneralTable.innerHTML += "<tr class='profile-general-item'><td>Quests Completed:</td><td>" + data.quests_completed + "</td></tr>";
+  profileGeneralTable.innerHTML += "<tr class='profile-general-item'><td>Total Coins:</td><td>" + data.total_coins + "</td></tr>";
+  profileGeneralTable.innerHTML += "<tr class='profile-general-item'><td>Total Kills:</td><td>" + data.total_kills + "</td></tr>";
+  profileGeneralTable.innerHTML += "<tr class='profile-general-item'><td>Total Wins:</td><td>" + data.total_wins + "</td></tr>";
+  profileGeneralTable.innerHTML += "<hr>";
+  
+  profileGeneralTable.innerHTML += "<tr class='profile-general-item'><td>Gifts Sent:</td><td>" + data.gifts_sent + "</td></tr>";
+  profileGeneralTable.innerHTML += "<tr class='profile-general-item'><td>Gifts Received:</td><td>" + data.gifts_received + "</td></tr>";
+  profileGeneralTable.innerHTML += "<tr class='profile-general-item'><td>Rewards Claimed:</td><td>" + data.rewards.claimed + "</td></tr>";
+  profileGeneralTable.innerHTML += "<tr class='profile-general-item'><td>Rewards Claimed Daily:</td><td>" + data.rewards.claimed_daily + "</td></tr>";
+  profileGeneralTable.innerHTML += "<tr class='profile-general-item'><td>Best Rewards Streak:</td><td>" + data.rewards.streak_best + "</td></tr>";
+  profileGeneralTable.innerHTML += "<tr class='profile-general-item'><td>Current Rewards Streak:</td><td>" + data.rewards.streak_current + "</td></tr>";
+  profileGeneralTable.innerHTML += "<tr class='profile-general-item'><td>Reward Tokens:</td><td>" + data.rewards.tokens + "</td></tr>";
+  profileGeneralTable.innerHTML += "<hr>";
+  
+  if (data.first_login != null) profileGeneralTable.innerHTML += "<tr class='profile-general-item'><td>First Login:</td><td>" + showDate(data.first_login) + "</td></tr>";
+  if (data.last_login != null) profileGeneralTable.innerHTML += "<tr class='profile-general-item'><td>Last Login:</td><td>" + showDate(data.last_login) + "</td></tr>";
+  if (data.last_logout != null) profileGeneralTable.innerHTML += "<tr class='profile-general-item'><td>Last Logout:</td><td>" + showDate(data.last_logout) + "</td></tr>";
   
 }
 
+function fetchSection(uuid, section) {
+  
+  fetch("https://api.slothpixel.me/api/players/" + uuid + "/" + section)
+  .then(response => {
+    if (response.status == 200) {
+      return response.json();
+    } else {
+      displayError("An error occured.<pre>" + response.statusText + "</pre>");
+    }
+  })
+  .then(data => eval(section + "(data);"));
+  
+}
 
+function recentGames(data) {
+  
+  let RecentGamesBody = document.getElementById("recent-games-body");
+  RecentGamesBody.innerHTML = "";
+  let RecentGamesTable = document.createElement("table");
+  RecentGamesBody.appendChild(RecentGamesTable);
+  
+  if (data.length == 0) {
+    RecentGamesTable.innerHTML += "No games within the past 3 days";
+    return;
+  } else {
+    RecentGamesTable.innerHTML += "<tr class='profile-general-item'><th></th><th>Start Time</th><th>End Time</th><th>Game</th><th>Mode</th><th>Map</th></tr>";
+  }
+  
+  for (let i = 0; i < data.length; i++) {
+    RecentGamesTable.innerHTML += "<tr class='profile-general-item'><td>" + (i + 1) + ". </td><td>" + showDate(data[i].date, "mdt") + "</td><td>" + showDate(data[i].ended, "mdt") + "</td><td>" + data[i].gameType + "</td><td>" + data[i].mode + "</td><td>" + data[i].map + "</td></tr>";
+  }
+  
+}
 
+function friends(data) {
+  
+  let profileFriendsBody = document.getElementById("profile-friends-body");
+  profileFriendsBody.innerHTML = "";
+  let profileFriendsTable = document.createElement("table");
+  profileFriendsBody.appendChild(profileFriendsTable);
+  
+  if (data.length == 0) {
+    profileFriendsTable.innerHTML += "Nothing here yet!";
+    return;
+  } else {
+    profileFriendsTable.innerHTML += ""//"<tr class='profile-general-item'><th></th><th>Start Time</th><th>End Time</th><th>Game</th><th>Mode</th><th>Map</th></tr>";
+  }
+  
+}
 
 
 function var_dump(obj, level, section) {
