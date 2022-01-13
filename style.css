@@ -13,6 +13,7 @@ body {
 	margin: 0;
 	padding: 0;
 	font-family: 'Source Sans Pro', sans-serif;
+	overflow-x: hidden;
 }
 
 header {
@@ -246,13 +247,9 @@ section#profile-results div#profile-results-body div.profile-results-item {
 }
 
 section td {
-	padding-right: 10px;
+	padding: 2px 10px 2px 2px;
+	line-height: 0.9;
 }
-
-/*
-section#profile-general div#profile-general-body table tr.profile-general-item td {
-	padding-right: 10px;
-}*/
 
 footer {
 	position: fixed;

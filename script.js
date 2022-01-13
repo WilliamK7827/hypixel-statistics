@@ -129,9 +129,9 @@ function displayError(error) {
 
 /* SEARCH */
 
-function searchPlayer() {
+function searchPlayer(player) {
   
-  let playerID = document.getElementById("search").value;
+  let playerID = (player == undefined) ? document.getElementById("search").value : player;
   playerID = playerID.replaceAll(/[^a-zA-Z0-9_-]/g, "");
   if (document.getElementById("search").value == "") return;
   
@@ -148,16 +148,18 @@ function searchPlayer() {
       credentials: 'include'
     })*/
     .then(response => {
-      if (response.status != 403) {
-        return response.json();
-      } else {
-        displayError("Request rejected due to CORS.<pre>" + response.statusText + "</pre>");
-      }
+      return response.json();
     })
     .then(data => {
       showProfile(data);
     })
-    .catch(err => displayError("User \"" + playerID + "\" does not exist.<pre>" + err + "</pre>"));
+    .catch(err => {
+      /*if (response.status == 403) {
+        displayError("Request rejected due to CORS.<br><a target='_blank' href='https://cors-anywhere.herokuapp.com/'>Click here for CORS</a><pre>" + response.statusText + "</pre>");
+      } else {*/
+        displayError("User \"" + playerID + "\" does not exist.<pre>" + err + "</pre>");
+      //}
+    });
     //.catch(err => console.log(err));
   } else {
     fetch("https://cors-anywhere.herokuapp.com/api.mojang.com/users/profiles/minecraft/" + playerID, {
@@ -172,21 +174,22 @@ function searchPlayer() {
       credentials: 'include'
     })*/
     .then(response => {
-      if (response.status != 403) {
-        return response.json();
-      } else {
-        displayError("Request rejected due to CORS.<pre>" + response.statusText + "</pre>");
-      }
+      return response.json();
     })
     .then(data => {
       showProfile(data);
     })
-    .catch(err => displayError("User \"" + playerID + "\" does not exist.<pre>" + err + "</pre>"));
+    .catch(err => {
+      /*if (response.status == 403) {
+        displayError("Request rejected due to CORS.<br><a target='_blank' href='https://cors-anywhere.herokuapp.com/'>Click here for CORS</a><pre>" + response.statusText + "</pre>");
+      } else {*/
+        displayError("User \"" + playerID + "\" does not exist.<pre>" + err + "</pre>");
+      //}
+    });
     //.catch(err => console.log(err));
   }
 
 }
-
 
 /* Player: PROFILE RESULTS */
 
@@ -266,7 +269,7 @@ function showPlayerStats(data) {
   buildSection("profile-friends", "Friends");
   fetchSection(data.uuid, "friends");
   
-  // achievements, quests, friends
+  // achievements, quests
   // guild
   
   buildSection("var_dump", "var_dump code for JS stolen from https://theredpine.wordpress.com/2011/10/23/var_dump-for-javascript/");
@@ -348,7 +351,7 @@ function recentGames(data) {
   }
   
   for (let i = 0; i < data.length; i++) {
-    RecentGamesTable.innerHTML += "<tr class='profile-general-item'><td>" + (i + 1) + ". </td><td>" + showDate(data[i].date, "mdt") + "</td><td>" + showDate(data[i].ended, "mdt") + "</td><td>" + data[i].gameType + "</td><td>" + data[i].mode + "</td><td>" + data[i].map + "</td></tr>";
+    RecentGamesTable.innerHTML += "<tr class='profile-general-item'><td>" + (i + 1) + ". </td><td>" + showDate(data[i].date, "mdt") + "</td><td>" + ((data[i].ended != undefined) ? showDate(data[i].ended, "mdt") : "In progress") + "</td><td>" + data[i].gameType + "</td><td>" + data[i].mode + "</td><td>" + data[i].map + "</td></tr>";
   }
   
 }
@@ -364,11 +367,14 @@ function friends(data) {
     profileFriendsTable.innerHTML += "Nothing here yet!";
     return;
   } else {
-    profileFriendsTable.innerHTML += ""//"<tr class='profile-general-item'><th></th><th>Start Time</th><th>End Time</th><th>Game</th><th>Mode</th><th>Map</th></tr>";
+    console.log(data);
+    profileFriendsTable.innerHTML += "<tr class='profile-friends-item'><th></th><th>Friend UUID</th><th>Direction Sent</th><th>Time</th></tr>";
+    for (let i = 0; i < data.length; i++) {
+      profileFriendsTable.innerHTML += "<tr class='profile-friends-item'><td>" + (i + 1) + "</td><td onclick='searchPlayer(\"" + data[i].uuid + "\")'>" + data[i].uuid + "</td><td>" + (data[i].uuid == data[i].sent_by ? "from them" : "from you") + "</td><td>" + showDate(data[i].started) + "</td></tr>";
+    }
   }
-  
-}
 
+}
 
 function var_dump(obj, level, section) {
   var dump = "(<i>" + (typeof obj) + "</i>) : ";
