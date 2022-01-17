@@ -20,9 +20,9 @@ body {
 	display: flex;
 	position: fixed;
 	background-color: #0004;
-	align-content: center;
+	align-items: center;
 	justify-content: center;
-	width: 100;
+	width: 100%;
 	height: 100vh;
 	z-index: 3;
 }
@@ -32,6 +32,16 @@ body {
 	height: 50vh;
 	background-color: white;
 	border-radius: 2.5vh;
+	text-align: center;
+	padding: 2.5vh;
+}
+
+#help span {
+	margin-bottom: 2.5vh;
+}
+
+#help-info {
+	font-size: 3vh;
 }
 
 header {
