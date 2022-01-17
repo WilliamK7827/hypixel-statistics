@@ -31,9 +31,9 @@ function colourPage() {
 function toggleLightbox() {
   let lightbox = document.getElementById('lightbox');
   console.log(lightbox.style.display);
-  if (lightbox.style.display == 'flex') {
+  if (lightbox.style.display != 'none') {
     lightbox.style.display = 'none';
-  } else if (lightbox.style.display == 'none' || lightbox.style.display == '') {
+  } else {
     lightbox.style.display = 'flex';
   }
 }
