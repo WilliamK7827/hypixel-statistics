@@ -3,7 +3,10 @@ if ('serviceWorker' in navigator) {
   navigator.serviceWorker.register('/sw.js');
 }
 
-document.addEventListener("load", colourPage());
+document.addEventListener("load", function () {
+  toggleLightbox();
+  colourPage();
+});
 
 document.addEventListener("keyup", function(event) {
   if (event.keyCode === 13) {
@@ -18,11 +21,21 @@ function colourPage() {
   let hue = 101 + Math.floor(Math.random() * 225);
   let sat = 75;
   let root = document.querySelector(':root').style;
-  root.setProperty('--lightAccent1', 'hsl(' + hue + 'deg, ' + sat + '%, ' + 50 + '%)');
-  root.setProperty('--darkAccent1', 'hsl(' + hue + 'deg, ' + sat + '%, ' + 40 + '%)');
+  root.setProperty('--lightAccent1', 'hsl(' + hue + 'deg, ' + sat + '%, ' + 45 + '%)');
+  root.setProperty('--darkAccent1', 'hsl(' + hue + 'deg, ' + sat + '%, ' + 35 + '%)');
   hue += 75;
-  root.setProperty('--lightAccent2', 'hsl(' + hue + 'deg, ' + sat + '%, ' + 50 + '%)');
-  root.setProperty('--darkAccent2', 'hsl(' + hue + 'deg, ' + sat + '%, ' + 40 + '%)');
+  root.setProperty('--lightAccent2', 'hsl(' + hue + 'deg, ' + sat + '%, ' + 45 + '%)');
+  root.setProperty('--darkAccent2', 'hsl(' + hue + 'deg, ' + sat + '%, ' + 35 + '%)');
+}
+
+function toggleLightbox() {
+  let lightbox = document.getElementById('lightbox');
+  console.log(lightbox.style.display);
+  if (lightbox.style.display == 'flex') {
+    lightbox.style.display = 'none';
+  } else if (lightbox.style.display == 'none' || lightbox.style.display == '') {
+    lightbox.style.display = 'flex';
+  }
 }
 
 function reload() {
@@ -154,13 +167,12 @@ function searchPlayer(player) {
       showProfile(data);
     })
     .catch(err => {
-      /*if (response.status == 403) {
-        displayError("Request rejected due to CORS.<br><a target='_blank' href='https://cors-anywhere.herokuapp.com/'>Click here for CORS</a><pre>" + response.statusText + "</pre>");
-      } else {*/
+      if ((err + " ").includes("SyntaxError: Unexpected token S in JSON at position 0")) {
+        displayError("Request rejected due to CORS.<br><a target='_blank' href='https://cors-anywhere.herokuapp.com/'>Click here for CORS</a>");
+      } else {
         displayError("User \"" + playerID + "\" does not exist.<pre>" + err + "</pre>");
-      //}
+      }
     });
-    //.catch(err => console.log(err));
   } else {
     fetch("https://cors-anywhere.herokuapp.com/api.mojang.com/users/profiles/minecraft/" + playerID, {
       mode: 'cors'
@@ -180,13 +192,12 @@ function searchPlayer(player) {
       showProfile(data);
     })
     .catch(err => {
-      /*if (response.status == 403) {
-        displayError("Request rejected due to CORS.<br><a target='_blank' href='https://cors-anywhere.herokuapp.com/'>Click here for CORS</a><pre>" + response.statusText + "</pre>");
-      } else {*/
+      if ((err + " ").includes("SyntaxError: Unexpected token S in JSON at position 0")) {
+        displayError("Request rejected due to CORS.<br><a target='_blank' href='https://cors-anywhere.herokuapp.com/'>Click here for CORS</a>");
+      } else {
         displayError("User \"" + playerID + "\" does not exist.<pre>" + err + "</pre>");
-      //}
+      }
     });
-    //.catch(err => console.log(err));
   }
 
 }
@@ -232,7 +243,6 @@ function selectProfile(uuid) {
       dataFromKey = data;
     })
     .catch(err => displayError("The player with the uuid \"" + uuid + "\" does not have any stats.<pre>" + err + "</pre>"));
-    //.catch(err => console.log(err));
   }
   
   fetch("https://api.slothpixel.me/api/players/" + uuid, {
@@ -247,7 +257,6 @@ function selectProfile(uuid) {
     }
   })
   .catch(err => displayError("The player with the uuid \"" + uuid + "\" does not have any stats.<pre>" + err + "</pre>"));
-  //.catch(err => console.log(err));
   
 }
 
@@ -259,7 +268,7 @@ function clearProfile(node) {
 /* Player: SHOW STATISTICS */
 
 function showPlayerStats(data) {
-  console.log(data);
+  //console.log(data);
   buildSection("profile-general", "General");
   playerGeneral(data);
   
@@ -367,10 +376,9 @@ function friends(data) {
     profileFriendsTable.innerHTML += "Nothing here yet!";
     return;
   } else {
-    console.log(data);
     profileFriendsTable.innerHTML += "<tr class='profile-friends-item'><th></th><th>Friend UUID</th><th>Direction Sent</th><th>Time</th></tr>";
     for (let i = 0; i < data.length; i++) {
-      profileFriendsTable.innerHTML += "<tr class='profile-friends-item'><td>" + (i + 1) + "</td><td onclick='searchPlayer(\"" + data[i].uuid + "\")'>" + data[i].uuid + "</td><td>" + (data[i].uuid == data[i].sent_by ? "from them" : "from you") + "</td><td>" + showDate(data[i].started) + "</td></tr>";
+      profileFriendsTable.innerHTML += "<tr class='profile-friends-item'><td>" + (i + 1) + "</td><td onclick='searchPlayer(\"" + data[i].uuid + "\")'>" + data[i].uuid + "</td><td>" + (data[i].uuid == data[i].sent_by ? "from friend" : "from self") + "</td><td>" + showDate(data[i].started) + "</td></tr>";
     }
   }
 
@@ -380,7 +388,7 @@ function var_dump(obj, level, section) {
   var dump = "(<i>" + (typeof obj) + "</i>) : ";
   var level_nbsp = "";
   if(typeof level == "undefined"){var level = 1;}
-  for(i = 0; i < 5*level; i++){level_nbsp += "&nbsp;";}
+  for(let i = 0; i < 5*level; i++){level_nbsp += "&nbsp;";}
   switch(typeof obj){
     case "string":
       dump += obj + "<br/>\n";

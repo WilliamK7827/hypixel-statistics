@@ -16,6 +16,20 @@ body {
 	overflow-x: hidden;
 }
 
+#lightbox {
+	display: flex;
+	background-color: #0004;
+	align-content: center;
+	justify-content: center;
+}
+
+#help {
+	width: 50vw;
+	height: 50vh;
+	background-color: white;
+	border-radius: 2.5vh;
+}
+
 header {
 	position: fixed;
 	height: 5vh;
