@@ -36,11 +36,11 @@ body {
 	padding: 2.5vh;
 }
 
-#help span {
+#help div {
 	margin-bottom: 2.5vh;
 }
 
-#help-info {
+#help-title {
 	font-size: 3vh;
 }
 
@@ -53,12 +53,24 @@ header {
 	box-shadow: 0 0 5px;
 }
 
-header span {
+header div#title {
+	display: inline-block;
 	position: relative;
 	left: 100px;
 	color: white;
 	font-size: 3vh;
 	line-height: 5vh;
+	width: fit-content;
+}
+
+header div#help-btn {
+	display: inline-block;
+	position: relative;
+	float: right;
+	right: 50px;
+	color: white;
+	line-height: 5vh;
+	width: fit-content;
 }
 
 aside {
