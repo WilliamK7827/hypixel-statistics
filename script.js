@@ -3,10 +3,10 @@ if ('serviceWorker' in navigator) {
   navigator.serviceWorker.register('/sw.js');
 }
 
-document.addEventListener("load", function () {
+window.onload = function() {
   toggleLightbox();
   colourPage();
-});
+};
 
 document.addEventListener("keyup", function(event) {
   if (event.keyCode === 13) {
@@ -30,7 +30,6 @@ function colourPage() {
 
 function toggleLightbox() {
   let lightbox = document.getElementById('lightbox');
-  console.log(lightbox.style.display);
   if (lightbox.style.display != 'none') {
     lightbox.style.display = 'none';
   } else {
