@@ -32,15 +32,15 @@ body {
 	height: 50vh;
 	background-color: white;
 	border-radius: 2.5vh;
-	text-align: center;
 	padding: 2.5vh;
 }
 
 #help div {
 	margin-bottom: 2.5vh;
+	font-size: 1.75vh;
 }
 
-#help-title {
+#help div#help-title {
 	font-size: 3vh;
 }
 
@@ -284,6 +284,10 @@ section#profile-results div#profile-results-body div.profile-results-item {
 	margin: 10px 0;
 	padding: 5px 0 5px 10px;
 	border-left: 0.1vh solid black;
+}
+
+.unfinished {
+	color: #af0040;
 }
 
 section td {

@@ -97,11 +97,11 @@ function buildSection(sectionName, displayName) {
   
   let secHead = document.createElement("div");
   secHead.setAttribute("class", "section-heading");
+  secHead.setAttribute("onclick", "toggleSectionBody(this.firstChild, '" + sectionName + "-body', false)");
   
   let secBtn = document.createElement("span");
   secBtn.setAttribute("id", sectionName + "-btn");
   secBtn.setAttribute("class", "section-btn");
-  secBtn.setAttribute("onclick", "toggleSectionBody(this, '" + sectionName + "-body', false)");
   secBtn.innerHTML = "&plus;";
   
   secHead.appendChild(secBtn);
@@ -294,6 +294,14 @@ function showDate(timestamp, format) {
   }
 }
 
+function parseName(input) {
+  input = input.toLowerCase().replaceAll("_", " ").replaceAll(" plus", "+").split(" ");
+  for (let i = 0; i < input.length; i++) {
+    input[i] = input[i][0].toUpperCase() + input[i].substring(1);
+  }
+  return input.join(" ");
+}
+
 function playerGeneral(data) {
   
   let profileGeneralBody = document.getElementById("profile-general-body");
@@ -359,7 +367,7 @@ function recentGames(data) {
   }
   
   for (let i = 0; i < data.length; i++) {
-    RecentGamesTable.innerHTML += "<tr class='profile-general-item'><td>" + (i + 1) + ". </td><td>" + showDate(data[i].date, "mdt") + "</td><td>" + ((data[i].ended != undefined) ? showDate(data[i].ended, "mdt") : "In progress") + "</td><td>" + data[i].gameType + "</td><td>" + data[i].mode + "</td><td>" + data[i].map + "</td></tr>";
+    RecentGamesTable.innerHTML += "<tr class='profile-general-item " + (((data[i].ended == undefined && data[i-1] != undefined) || (data[i].ended != undefined && data[i-1] != undefined && data[i-1].date < data[i].ended)) ? "unfinished" : "") + "'><td>" + (i + 1) + ". </td><td>" + showDate(data[i].date, "mdt") + "</td><td>" + ((data[i].ended != undefined) ? showDate(data[i].ended, "mdt") : "In progress") + "</td><td>" + data[i].gameType + "</td><td>" + parseName(data[i].mode) + "</td><td>" + data[i].map + "</td></tr>";
   }
   
 }
