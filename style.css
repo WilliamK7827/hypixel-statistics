@@ -81,7 +81,7 @@ aside {
 	position: relative;
 	height: 25vh;
 	width: 100%;
-	background-image: linear-gradient(#0004, #0004), radial-gradient(farthest-corner at 100% 100%, var(--lightAccent2), var(--lightAccent2));
+	background-image: linear-gradient(#0004, #0004), radial-gradient(farthest-corner at 100% 100%, var(--lightAccent2), var(--lightAccent1));
 }
 
 .bar {

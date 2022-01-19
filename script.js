@@ -173,6 +173,8 @@ function searchPlayer(player) {
     .catch(err => {
       if ((err + " ").includes("SyntaxError: Unexpected token S in JSON at position 0")) {
         displayError("Request rejected due to CORS.<br><a target='_blank' href='https://cors-anywhere.herokuapp.com/'>Click here for CORS</a>");
+      } else if ((err + " ").includes("TypeError: Failed to fetch")) {
+        displayError("No connection. Check your internet and try again.<pre>" + err + "</pre>");
       } else {
         displayError("User \"" + playerID + "\" does not exist.<pre>" + err + "</pre>");
       }
@@ -198,6 +200,8 @@ function searchPlayer(player) {
     .catch(err => {
       if ((err + " ").includes("SyntaxError: Unexpected token S in JSON at position 0")) {
         displayError("Request rejected due to CORS.<br><a target='_blank' href='https://cors-anywhere.herokuapp.com/'>Click here for CORS</a>");
+      } else if ((err + " ").includes("TypeError: Failed to fetch")) {
+        displayError("No connection. Check your internet and try again.<pre>" + err + "</pre>");
       } else {
         displayError("User \"" + playerID + "\" does not exist.<pre>" + err + "</pre>");
       }
@@ -205,6 +209,8 @@ function searchPlayer(player) {
   }
 
 }
+
+//
 
 /* Player: PROFILE RESULTS */
 
