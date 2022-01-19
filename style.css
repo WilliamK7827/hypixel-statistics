@@ -2,10 +2,10 @@
 @import url('https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@600&display=swap');
 
 :root {
-	--lightAccent1: skyblue;
-	--darkAccent1: blue;
-	--lightAccent2: lightgreen;
-	--darkAccent2: green;
+	--lightAccent1: #91240c;
+	--darkAccent1: #6d1d0a;
+	--lightAccent2: #314185;
+	--darkAccent2: #202d60;
 	--background: white;
 }
 
@@ -81,7 +81,7 @@ aside {
 	position: relative;
 	height: 25vh;
 	width: 100%;
-	background-image: linear-gradient(#0004, #0004);
+	background-image: linear-gradient(#0004, #0004), radial-gradient(farthest-corner at 100% 100%, var(--lightAccent2), var(--lightAccent2));
 }
 
 .bar {
@@ -236,6 +236,7 @@ section div.section-body {
 	border-top-width: 0px;
 	border-radius: 0 0 25px 25px;
 	padding: 20px;
+	overflow-x: auto;
 }
 
 section#profile-results span.profile-select-btn {

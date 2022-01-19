@@ -5,7 +5,7 @@ if ('serviceWorker' in navigator) {
 
 window.onload = function() {
   toggleLightbox();
-  colourPage();
+  setViewport();
 };
 
 document.addEventListener("keyup", function(event) {
@@ -16,6 +16,11 @@ document.addEventListener("keyup", function(event) {
 });
 
 let apiKeyUsed = false;
+
+function setViewport () {
+    var viewport = document.querySelector("meta[name=viewport]");
+    viewport.setAttribute("content", viewport.content + ", height = " + window.innerHeight);
+}
 
 function colourPage() {
   let hue = 101 + Math.floor(Math.random() * 225);
@@ -280,9 +285,11 @@ function showPlayerStats(data) {
   // achievements, quests
   // guild
   
+  /*
   buildSection("var_dump", "var_dump code for JS stolen from https://theredpine.wordpress.com/2011/10/23/var_dump-for-javascript/");
   document.getElementById("var_dump-body").innerHTML = "";
   var_dump(data, 1, "var_dump-body");
+  */
 }
 
 function showDate(timestamp, format) {
@@ -391,6 +398,7 @@ function friends(data) {
 
 }
 
+/*
 function var_dump(obj, level, section) {
   var dump = "(<i>" + (typeof obj) + "</i>) : ";
   var level_nbsp = "";
@@ -419,3 +427,4 @@ function var_dump(obj, level, section) {
   }
   else{return dump;}
 }
+*/
